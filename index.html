@@ -384,53 +384,97 @@ Aucune vidéo pour le moment.
 
 <script>
 
-function generateVideo(){
+async function generateVideo(){
 
-let idea =
-document.getElementById("idea").value;
+  let idea =
+    document.getElementById("idea").value;
 
-let status =
-document.getElementById("status");
+  let status =
+    document.getElementById("status");
 
-let preview =
-document.getElementById("preview");
+  let preview =
+    document.getElementById("preview");
 
+  if(idea.trim()===""){
 
-if(idea.trim()===""){
+    status.style.display="block";
 
-status.style.display="block";
+    status.innerHTML=
+      "⚠️ Écris d'abord une idée pour ta vidéo.";
 
-status.innerHTML=
-"⚠️ Écris d'abord une idée pour ta vidéo.";
+    return;
+  }
 
-return;
+  status.style.display="block";
+
+  status.innerHTML=
+    "⏳ Gemini prépare ton scénario...";
+
+  preview.innerHTML=
+    "🧠<br><br>Création du scénario...";
+
+  const API_URL =
+    "https://script.google.com/macros/s/XXXXXXXXXXXX/exec";
+
+  try {
+
+    const response = await fetch(API_URL, {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type":
+          "text/plain;charset=utf-8"
+      },
+
+      body: JSON.stringify({
+
+        prompt:
+          idea
+
+      })
+
+    });
+
+    const result =
+      await response.json();
+
+    if(!result.success){
+
+      throw new Error(
+        result.error ||
+        "Erreur lors de la génération."
+      );
+
+    }
+
+    status.innerHTML =
+      "✅ Scénario généré avec succès !";
+
+    preview.innerHTML =
+      "<div style='text-align:left; padding:20px;'>" +
+      "<h3>🎬 Ton scénario</h3>" +
+      "<pre style='white-space:pre-wrap; font-family:inherit;'>" +
+      result.scenario +
+      "</pre>" +
+      "</div>";
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    status.innerHTML =
+      "❌ Une erreur est survenue.";
+
+    preview.innerHTML =
+      "❌<br><br>" +
+      error.message;
+
+  }
 
 }
-
-
-status.style.display="block";
-
-status.innerHTML=
-"⏳ Préparation du scénario...";
-
-
-preview.innerHTML=
-"⏳<br><br>Préparation de ta vidéo...";
-
-
-setTimeout(function(){
-
-status.innerHTML=
-"🎬 Prototype fonctionnel ! La prochaine étape sera de connecter le véritable moteur IA.";
-
-preview.innerHTML=
-"🎬<br><br><strong>Votre vidéo sera générée ici.</strong><br><br>Scénario → scènes → animation → voix → montage";
-
-},1500);
-
-}
-
-
 function showCreate(){
 
 document.getElementById("create").style.display="block";
