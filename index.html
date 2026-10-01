@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Video Studio</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f7f7fb;
+    color:#222;
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:230px;
+    background:white;
+    border-right:1px solid #e5e5e5;
+    padding:25px 15px;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:35px;
+}
+
+.menu button{
+    width:100%;
+    border:0;
+    background:white;
+    padding:14px;
+    text-align:left;
+    border-radius:10px;
+    margin-bottom:8px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.menu button:hover{
+    background:#eeeafe;
+}
+
+.main{
+    margin-left:230px;
+    padding:40px;
+    max-width:1250px;
+}
+
+h1{
+    margin-top:0;
+    font-size:32px;
+}
+
+.subtitle{
+    color:#777;
+    margin-bottom:30px;
+}
+
+.container{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:25px;
+}
+
+.card{
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    border:1px solid #e8e8e8;
+    box-shadow:0 5px 20px rgba(0,0,0,0.04);
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-top:18px;
+    margin-bottom:8px;
+}
+
+textarea,
+select{
+    width:100%;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:14px;
+}
+
+textarea{
+    height:150px;
+    resize:none;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.generate{
+    width:100%;
+    margin-top:25px;
+    padding:16px;
+    border:0;
+    border-radius:12px;
+    background:#604bd8;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.generate:hover{
+    background:#4d3abd;
+}
+
+.preview{
+    height:420px;
+    background:#18181f;
+    border-radius:15px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:#aaa;
+    font-size:16px;
+}
+
+.status{
+    margin-top:15px;
+    padding:12px;
+    border-radius:10px;
+    background:#f0effa;
+    color:#604bd8;
+    display:none;
+}
+
+@media(max-width:800px){
+
+.sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+}
+
+.main{
+    margin-left:0;
+    padding:20px;
+}
+
+.container{
+    grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+✨ AI Video Studio
+</div>
+
+<div class="menu">
+
+<button onclick="showCreate()">
+🎬 Créer une vidéo
+</button>
+
+<button onclick="showCharacters()">
+👤 Mes personnages
+</button>
+
+<button onclick="showVideos()">
+📁 Mes vidéos
+</button>
+
+</div>
+
+</div>
+
+
+<div class="main">
+
+<div id="create">
+
+<h1>
+Créer une vidéo
+</h1>
+
+<div class="subtitle">
+Transforme une idée en vidéo avec l'intelligence artificielle.
+</div>
+
+
+<div class="container">
+
+
+<div class="card">
+
+<label>
+Décris ta vidéo
+</label>
+
+<textarea id="idea"
+placeholder="Exemple : Une femme marocaine prépare un tajine de poulet et explique la recette en darija..."></textarea>
+
+
+<div class="row">
+
+<div>
+
+<label>
+Langue
+</label>
+
+<select id="language">
+
+<option>Darija</option>
+<option>Français</option>
+<option>Arabe</option>
+<option>Anglais</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+Durée
+</label>
+
+<select id="duration">
+
+<option>30 secondes</option>
+<option>1 minute</option>
+<option>3 minutes</option>
+<option>5 minutes</option>
+<option>10 minutes</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="row">
+
+<div>
+
+<label>
+Style
+</label>
+
+<select>
+
+<option>Réaliste</option>
+<option>Cinématique</option>
+<option>Dessin animé</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+Personnage
+</label>
+
+<select>
+
+<option>Maya</option>
+<option>Nouveau personnage</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<button class="generate" onclick="generateVideo()">
+
+✨ Générer la vidéo
+
+</button>
+
+
+<div id="status" class="status"></div>
+
+</div>
+
+
+<div class="card">
+
+<label>
+Aperçu de la vidéo
+</label>
+
+<div class="preview" id="preview">
+
+🎥
+
+<br>
+
+<br>
+
+Ta vidéo apparaîtra ici.
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div id="characters" style="display:none">
+
+<h1>
+👤 Mes personnages
+</h1>
+
+<div class="card">
+
+<h2>
+Maya
+</h2>
+
+<p>
+Personnage principal
+</p>
+
+<p>
+Cette section permettra plus tard de créer un personnage et de le conserver dans toutes les vidéos.
+</p>
+
+</div>
+
+</div>
+
+
+<div id="videos" style="display:none">
+
+<h1>
+📁 Mes vidéos
+</h1>
+
+<div class="card">
+
+<p>
+Aucune vidéo pour le moment.
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+function generateVideo(){
+
+let idea =
+document.getElementById("idea").value;
+
+let status =
+document.getElementById("status");
+
+let preview =
+document.getElementById("preview");
+
+
+if(idea.trim()===""){
+
+status.style.display="block";
+
+status.innerHTML=
+"⚠️ Écris d'abord une idée pour ta vidéo.";
+
+return;
+
+}
+
+
+status.style.display="block";
+
+status.innerHTML=
+"⏳ Préparation du scénario...";
+
+
+preview.innerHTML=
+"⏳<br><br>Préparation de ta vidéo...";
+
+
+setTimeout(function(){
+
+status.innerHTML=
+"🎬 Prototype fonctionnel ! La prochaine étape sera de connecter le véritable moteur IA.";
+
+preview.innerHTML=
+"🎬<br><br><strong>Votre vidéo sera générée ici.</strong><br><br>Scénario → scènes → animation → voix → montage";
+
+},1500);
+
+}
+
+
+function showCreate(){
+
+document.getElementById("create").style.display="block";
+
+document.getElementById("characters").style.display="none";
+
+document.getElementById("videos").style.display="none";
+
+}
+
+
+function showCharacters(){
+
+document.getElementById("create").style.display="none";
+
+document.getElementById("characters").style.display="block";
+
+document.getElementById("videos").style.display="none";
+
+}
+
+
+function showVideos(){
+
+document.getElementById("create").style.display="none";
+
+document.getElementById("characters").style.display="none";
+
+document.getElementById("videos").style.display="block";
+
+}
+
+</script>
+
+</body>
+
+</html>
